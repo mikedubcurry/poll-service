@@ -1,0 +1,26 @@
+{
+  "name": "votes",
+  "description": "<!-- title: 'AWS NodeJS Example' description: 'This template demonstrates how to deploy a NodeJS function running on AWS Lambda using the traditional Serverless Framework.' layout: Doc framework: v3 platform: AWS language: nodeJS priority: 1 authorLink: 'https://github.com/serverless' authorName: 'Serverless, inc.' authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4' -->",
+  "version": "1.0.0",
+  "main": "handler.js",
+  "scripts": {
+    "deploy": "npm run build && sls deploy",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.97",
+    "@types/aws-sdk": "^2.7.0",
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^17.0.36",
+    "@types/uuid": "^8.3.4",
+    "typescript": "^4.7.2"
+  },
+  "dependencies": {
+    "aws-lambda": "^1.0.7",
+    "aws-sdk": "^2.1145.0",
+    "dotenv": "^16.0.1",
+    "uuid": "^8.3.2"
+  }
+}

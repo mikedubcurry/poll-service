@@ -1,0 +1,83 @@
+org: cryptofool13
+app: mikecurry-dev
+service: votes
+
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+  stage: dev
+  environment:
+    POLL_TABLE: ${self:service}-polls-${self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.POLL_TABLE}"
+
+functions:
+  createPoll:
+    handler: dist/create.createPoll
+    events:
+      - http:
+          path: votes
+          method: POST
+          cors: true
+  getVotes:
+    handler: dist/read.getVotes
+    events:
+      - http:
+          path: votes
+          method: GET
+          cors: true
+  getPoll:
+    handler: dist/read.getPoll
+    events:
+      - http:
+          path: votes/{pollId}
+          method: GET
+          cors: true
+  vote:
+    handler: dist/update.vote
+    events:
+      - http:
+          path: votes/{pollId}
+          method: POST
+          cors: true
+  endPoll:
+    handler: dist/update.endPoll
+    events:
+      - http:
+          path: votes/{pollId}
+          method: PUT
+          cors: true
+  deleteVote:
+    handler: dist/delete.deletePoll
+    events:
+      - http:
+          path: votes/{pollId}
+          method: DELETE
+          cors: true
+
+resources:
+  Resources:
+    VotesTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: pollId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: pollId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.POLL_TABLE}
